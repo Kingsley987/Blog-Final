@@ -104,7 +104,16 @@ export function Header({ onCreatePost }: HeaderProps) {
           <div className="md:hidden flex items-center space-x-2">
             <ThemeSwitcher />
             <button
-              onClick={toggleMobileMenu}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleMobileMenu();
+              }}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleMobileMenu();
+              }}
               className="p-3 rounded-lg hover:bg-gray-800 active:bg-gray-700 transition-colors touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="Toggle mobile menu"
               style={{ WebkitTapHighlightColor: 'transparent' }}
@@ -121,9 +130,22 @@ export function Header({ onCreatePost }: HeaderProps) {
               {user ? (
                 <>
                   <button
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
                       onCreatePost();
-                      setIsMobileMenuOpen(false);
+                      // Close menu after a small delay to ensure the click is processed
+                      setTimeout(() => {
+                        setIsMobileMenuOpen(false);
+                      }, 100);
+                    }}
+                    onTouchEnd={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      onCreatePost();
+                      setTimeout(() => {
+                        setIsMobileMenuOpen(false);
+                      }, 100);
                     }}
                     className="w-full flex items-center justify-center space-x-2 bg-white text-black px-4 py-3 rounded-lg font-semibold hover:bg-gray-100 active:bg-gray-200 transition-all duration-300 touch-manipulation min-h-[44px]"
                     style={{ WebkitTapHighlightColor: 'transparent' }}
@@ -138,7 +160,16 @@ export function Header({ onCreatePost }: HeaderProps) {
                       <span className="text-gray-300">{user.email}</span>
                     </div>
                     <button
-                      onClick={handleSignOut}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleSignOut();
+                      }}
+                      onTouchEnd={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleSignOut();
+                      }}
                       disabled={isSigningOut}
                       className="w-full flex items-center justify-center space-x-2 text-gray-300 hover:text-white active:text-white px-4 py-3 rounded-lg hover:bg-gray-700 active:bg-gray-600 transition-all duration-300 touch-manipulation min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{ WebkitTapHighlightColor: 'transparent' }}

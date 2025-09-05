@@ -58,8 +58,18 @@ export function CreateEditModal({ post, isOpen, onClose, onSave }: CreateEditMod
               {post ? 'Edit Post' : 'Create New Post'}
             </h2>
             <button
-              onClick={onClose}
-              className="p-2 hover:bg-white dark:hover:bg-gray-600 rounded-lg transition-all duration-200 hover:scale-110 hover:shadow-md text-gray-600 dark:text-gray-300"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onClose();
+              }}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onClose();
+              }}
+              className="p-2 hover:bg-white dark:hover:bg-gray-600 rounded-lg transition-all duration-200 hover:scale-110 hover:shadow-md text-gray-600 dark:text-gray-300 touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
+              style={{ WebkitTapHighlightColor: 'transparent' }}
             >
               <X size={20} className="sm:w-6 sm:h-6" />
             </button>
@@ -76,9 +86,10 @@ export function CreateEditModal({ post, isOpen, onClose, onSave }: CreateEditMod
                   id="author"
                   value={author}
                   onChange={(e) => setAuthor(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 hover:border-gray-400 dark:hover:border-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 hover:border-gray-400 dark:hover:border-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 text-base"
                   placeholder="Your name"
                   required
+                  style={{ WebkitTapHighlightColor: 'transparent' }}
                 />
               </div>
               
@@ -94,6 +105,7 @@ export function CreateEditModal({ post, isOpen, onClose, onSave }: CreateEditMod
                   className="w-full px-4 py-3 text-lg border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 hover:border-gray-400 dark:hover:border-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="Enter a compelling title..."
                   required
+                  style={{ WebkitTapHighlightColor: 'transparent' }}
                 />
               </div>
               
@@ -106,9 +118,10 @@ export function CreateEditModal({ post, isOpen, onClose, onSave }: CreateEditMod
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   rows={8}
-                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 hover:border-gray-400 dark:hover:border-gray-500 resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 text-sm sm:text-base"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 hover:border-gray-400 dark:hover:border-gray-500 resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 text-base"
                   placeholder="Write your blog post content here..."
                   required
+                  style={{ WebkitTapHighlightColor: 'transparent' }}
                 />
               </div>
             </div>
@@ -116,15 +129,26 @@ export function CreateEditModal({ post, isOpen, onClose, onSave }: CreateEditMod
             <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
               <button
                 type="button"
-                onClick={onClose}
-                className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 hover:scale-105 text-sm sm:text-base"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onClose();
+                }}
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onClose();
+                }}
+                className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 hover:scale-105 text-sm sm:text-base touch-manipulation min-h-[44px]"
+                style={{ WebkitTapHighlightColor: 'transparent' }}
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saving || !title.trim() || !content.trim() || !author.trim()}
-                className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 hover:shadow-lg text-sm sm:text-base"
+                className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 hover:shadow-lg text-sm sm:text-base touch-manipulation min-h-[44px]"
+                style={{ WebkitTapHighlightColor: 'transparent' }}
               >
                 <Save size={16} className="sm:w-5 sm:h-5" />
                 <span>{saving ? 'Saving...' : 'Save Post'}</span>

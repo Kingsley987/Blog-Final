@@ -75,4 +75,27 @@ html.dark {
   button:active, a:active {
     transform: scale(0.98);
   }
+  
+  /* Prevent zoom on input focus */
+  input, textarea, select {
+    font-size: 16px !important;
+    -webkit-appearance: none;
+    border-radius: 0;
+  }
+  
+  /* Better mobile form handling */
+  input:focus, textarea:focus {
+    -webkit-appearance: none;
+    outline: none;
+  }
+  
+  /* Prevent double-tap zoom on buttons */
+  button {
+    touch-action: manipulation;
+  }
+  
+  /* Better mobile modal handling */
+  .fixed {
+    -webkit-overflow-scrolling: touch;
+  }
 }

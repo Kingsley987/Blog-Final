@@ -11,10 +11,18 @@ interface HeaderProps {
 export function Header({ onCreatePost }: HeaderProps) {
   const { user, signOut } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
   const handleSignOut = async () => {
-    await signOut();
-    setIsMobileMenuOpen(false);
+    try {
+      setIsSigningOut(true);
+      await signOut();
+      setIsMobileMenuOpen(false);
+    } catch (error) {
+      console.error('Error signing out:', error);
+    } finally {
+      setIsSigningOut(false);
+    }
   };
 
   const toggleMobileMenu = () => {
@@ -60,10 +68,15 @@ export function Header({ onCreatePost }: HeaderProps) {
                   </div>
                   <button
                     onClick={handleSignOut}
-                    className="inline-flex items-center space-x-2 text-gray-300 hover:text-white px-3 py-2 rounded-lg hover:bg-gray-800 transition-all duration-300"
+                    disabled={isSigningOut}
+                    className="inline-flex items-center space-x-2 text-gray-300 hover:text-white px-3 py-2 rounded-lg hover:bg-gray-800 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <LogOut size={16} />
-                    <span>Sign Out</span>
+                    {isSigningOut ? (
+                      <div className="w-4 h-4 border-2 border-gray-300 border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <LogOut size={16} />
+                    )}
+                    <span>{isSigningOut ? 'Signing Out...' : 'Sign Out'}</span>
                   </button>
                 </div>
               </>
@@ -92,8 +105,9 @@ export function Header({ onCreatePost }: HeaderProps) {
             <ThemeSwitcher />
             <button
               onClick={toggleMobileMenu}
-              className="p-2 rounded-lg hover:bg-gray-800 transition-colors"
+              className="p-3 rounded-lg hover:bg-gray-800 active:bg-gray-700 transition-colors touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="Toggle mobile menu"
+              style={{ WebkitTapHighlightColor: 'transparent' }}
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -111,23 +125,30 @@ export function Header({ onCreatePost }: HeaderProps) {
                       onCreatePost();
                       setIsMobileMenuOpen(false);
                     }}
-                    className="w-full flex items-center space-x-2 bg-white text-black px-4 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300"
+                    className="w-full flex items-center justify-center space-x-2 bg-white text-black px-4 py-3 rounded-lg font-semibold hover:bg-gray-100 active:bg-gray-200 transition-all duration-300 touch-manipulation min-h-[44px]"
+                    style={{ WebkitTapHighlightColor: 'transparent' }}
                   >
                     <PenTool size={20} />
                     <span>Write Post</span>
                   </button>
                   
                   <div className="px-4 py-2 bg-gray-800 rounded-lg">
-                    <div className="flex items-center space-x-2 text-sm mb-2">
+                    <div className="flex items-center space-x-2 text-sm mb-3">
                       <User size={16} className="text-gray-300" />
                       <span className="text-gray-300">{user.email}</span>
                     </div>
                     <button
                       onClick={handleSignOut}
-                      className="w-full flex items-center space-x-2 text-gray-300 hover:text-white px-3 py-2 rounded-lg hover:bg-gray-700 transition-all duration-300"
+                      disabled={isSigningOut}
+                      className="w-full flex items-center justify-center space-x-2 text-gray-300 hover:text-white active:text-white px-4 py-3 rounded-lg hover:bg-gray-700 active:bg-gray-600 transition-all duration-300 touch-manipulation min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed"
+                      style={{ WebkitTapHighlightColor: 'transparent' }}
                     >
-                      <LogOut size={16} />
-                      <span>Sign Out</span>
+                      {isSigningOut ? (
+                        <div className="w-4 h-4 border-2 border-gray-300 border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <LogOut size={18} />
+                      )}
+                      <span className="font-medium">{isSigningOut ? 'Signing Out...' : 'Sign Out'}</span>
                     </button>
                   </div>
                 </>
@@ -136,14 +157,16 @@ export function Header({ onCreatePost }: HeaderProps) {
                   <Link
                     to="/signin"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block w-full text-gray-300 hover:text-white px-4 py-3 rounded-lg hover:bg-gray-800 transition-all duration-300"
+                    className="block w-full text-gray-300 hover:text-white active:text-white px-4 py-3 rounded-lg hover:bg-gray-800 active:bg-gray-700 transition-all duration-300 touch-manipulation min-h-[44px] flex items-center"
+                    style={{ WebkitTapHighlightColor: 'transparent' }}
                   >
                     Sign In
                   </Link>
                   <Link
                     to="/signup"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block w-full flex items-center space-x-2 bg-white text-black px-4 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300"
+                    className="block w-full flex items-center justify-center space-x-2 bg-white text-black px-4 py-3 rounded-lg font-semibold hover:bg-gray-100 active:bg-gray-200 transition-all duration-300 touch-manipulation min-h-[44px]"
+                    style={{ WebkitTapHighlightColor: 'transparent' }}
                   >
                     <User size={20} />
                     <span>Sign Up</span>

@@ -18,6 +18,7 @@ import { BlogPost } from './lib/supabase';
 
 function BlogApp() {
   const { posts, loading, error, createPost, updatePost, deletePost } = useBlogPosts();
+  const { user } = useAuth();
   
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
@@ -52,8 +53,8 @@ function BlogApp() {
       }
     } catch (error) {
       console.error('Error saving post:', error);
-      // You could add a toast notification here
-      alert(error instanceof Error ? error.message : 'Failed to save post');
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save post';
+      alert(`Error: ${errorMessage}`);
     }
   };
 
@@ -86,6 +87,7 @@ function BlogApp() {
               Please connect to Supabase to start using the blog. Click the "Connect to Supabase" button in the top right corner.
             </p>
           </div>
+          
         </div>
       </div>
     );
@@ -94,6 +96,7 @@ function BlogApp() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <Header onCreatePost={handleCreatePost} />
+      
       
       <main className="max-w-6xl mx-auto px-4 py-6 sm:py-8">
         {loading ? (

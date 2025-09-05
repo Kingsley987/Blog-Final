@@ -50,18 +50,35 @@ export function useBlogPosts() {
 
   const createPost = async (title: string, content: string, author: string) => {
     try {
+      // Check if Supabase is configured
+      if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+        throw new Error('Supabase is not configured. Please set up your environment variables.');
+      }
+
       // Get the current user
-      const { data: { user } } = await supabase.auth.getUser();
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError) {
+        throw new Error('Failed to get user information. Please try signing in again.');
+      }
       
       if (!user) {
-        throw new Error('User must be authenticated to create posts');
+        throw new Error('You must be signed in to create posts. Please sign in and try again.');
       }
 
       const { error } = await supabase
         .from('posts')
         .insert([{ title, content, author, user_id: user.id }]);
 
-      if (error) throw error;
+      if (error) {
+        if (error.code === 'PGRST301') {
+          throw new Error('Database connection failed. Please check your Supabase configuration.');
+        } else if (error.code === '42501') {
+          throw new Error('Permission denied. You may not have the required permissions to create posts.');
+        } else {
+          throw new Error(`Database error: ${error.message}`);
+        }
+      }
       
       // Immediately refetch posts to show the new post
       await fetchPosts();

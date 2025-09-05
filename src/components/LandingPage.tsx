@@ -59,7 +59,6 @@ export const LandingPage: React.FC = () => {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Bold Blog</h1>
-                <p className="text-gray-600 dark:text-gray-300 text-sm">Share your thoughts with the world</p>
               </div>
             </div>
             

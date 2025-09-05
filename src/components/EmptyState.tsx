@@ -17,7 +17,7 @@ export function EmptyState({ onCreatePost }: EmptyStateProps) {
       </h3>
       
       <p className="text-gray-600 dark:text-gray-300 mb-8 max-w-md mx-auto text-lg">
-        Start sharing your thoughts and ideas with the world by creating your first blog post.
+        Create your first blog post to get started.
       </p>
       
       <button

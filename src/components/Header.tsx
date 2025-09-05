@@ -20,6 +20,10 @@ export function Header({ onCreatePost }: HeaderProps) {
       setIsMobileMenuOpen(false);
     } catch (error) {
       console.error('Error signing out:', error);
+      // Don't show error alert for session missing - it's handled gracefully
+      if (error instanceof Error && !error.message.includes('Auth session missing')) {
+        alert(`Sign out failed: ${error.message}`);
+      }
     } finally {
       setIsSigningOut(false);
     }
@@ -41,8 +45,8 @@ export function Header({ onCreatePost }: HeaderProps) {
               <Sparkles size={10} className="absolute -top-1 -right-1 text-yellow-400 animate-bounce sm:w-3 sm:h-3 md:w-4 md:h-4" />
             </div>
             <div className="hidden sm:block">
+              {/* Clean header without tagline */}
               <h1 className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">Bold Blog</h1>
-              <p className="text-gray-400 text-xs sm:text-sm animate-pulse">Share your thoughts with the world</p>
             </div>
             <div className="block sm:hidden">
               <h1 className="text-sm font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">Bold Blog</h1>
@@ -163,20 +167,33 @@ export function Header({ onCreatePost }: HeaderProps) {
               ) : (
                 <>
                   <Link
-                    to="/signin"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block w-full text-gray-300 hover:text-white active:text-white px-4 py-3 rounded-lg hover:bg-gray-800 active:bg-gray-700 transition-all duration-300 min-h-[48px] flex items-center justify-center border border-gray-600 hover:border-gray-500 text-sm sm:text-base"
-                  >
-                    Sign In
-                  </Link>
-                  <Link
                     to="/signup"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 active:from-blue-800 active:to-purple-800 transition-all duration-300 min-h-[48px] shadow-lg hover:shadow-xl transform hover:scale-105"
+                    className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 active:from-blue-800 active:to-purple-800 transition-all duration-300 min-h-[48px] shadow-lg hover:shadow-xl transform hover:scale-105"
                   >
                     <User size={18} />
                     <span className="text-sm sm:text-base">Sign Up</span>
                   </Link>
+                  
+                  <div className="bg-gradient-to-r from-gray-800 to-gray-700 rounded-lg p-3 sm:p-4 shadow-lg">
+                    <div className="flex items-center space-x-3 mb-3">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-gray-500 to-gray-600 rounded-full flex items-center justify-center flex-shrink-0">
+                        <User size={16} className="text-white sm:w-5 sm:h-5" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs text-gray-300">Not signed in</p>
+                        <p className="text-white font-medium text-sm sm:text-base">Sign in to create posts</p>
+                      </div>
+                    </div>
+                    <Link
+                      to="/signin"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="w-full flex items-center justify-center space-x-2 text-gray-300 hover:text-white active:text-white px-3 py-2 rounded-lg hover:bg-gray-600 active:bg-gray-500 transition-all duration-300 min-h-[44px] border border-gray-600 hover:border-gray-500"
+                    >
+                      <User size={16} />
+                      <span className="font-medium text-sm">Sign In</span>
+                    </Link>
+                  </div>
                 </>
               )}
             </div>

@@ -80,7 +80,30 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      // Check if there's a current session first
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        // No active session, just clear the local state
+        setSession(null);
+        setUser(null);
+        return;
+      }
+      
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        // Even if signOut fails, clear the local state
+        setSession(null);
+        setUser(null);
+        throw error;
+      }
+    } catch (error) {
+      // Always clear local state even if signOut fails
+      setSession(null);
+      setUser(null);
+      throw error;
+    }
   };
 
   const value = {

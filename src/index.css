@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Dark mode support */
+html {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

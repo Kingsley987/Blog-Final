@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { Header } from './components/Header';
 import { BlogCard } from './components/BlogCard';
 import { PostModal } from './components/PostModal';
@@ -6,10 +9,14 @@ import { CreateEditModal } from './components/CreateEditModal';
 import { DeleteConfirmModal } from './components/DeleteConfirmModal';
 import { EmptyState } from './components/EmptyState';
 import { LoadingSpinner } from './components/LoadingSpinner';
+import { SignIn } from './components/SignIn';
+import { SignUp } from './components/SignUp';
+import { ProtectedRoute } from './components/ProtectedRoute';
+import { LandingPage } from './components/LandingPage';
 import { useBlogPosts } from './hooks/useBlogPosts';
 import { BlogPost } from './lib/supabase';
 
-function App() {
+function BlogApp() {
   const { posts, loading, error, createPost, updatePost, deletePost } = useBlogPosts();
   
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
@@ -59,11 +66,11 @@ function App() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
         <Header onCreatePost={handleCreatePost} />
         <div className="max-w-6xl mx-auto px-4 py-8">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
-            <p className="text-red-800">
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-center">
+            <p className="text-red-800 dark:text-red-300">
               Please connect to Supabase to start using the blog. Click the "Connect to Supabase" button in the top right corner.
             </p>
           </div>
@@ -73,7 +80,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <Header onCreatePost={handleCreatePost} />
       
       <main className="max-w-6xl mx-auto px-4 py-8">
@@ -84,8 +91,8 @@ function App() {
         ) : (
           <>
             <div className="mb-8 text-center">
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">Latest Posts</h2>
-              <p className="text-gray-600">Discover amazing stories and insights from our community</p>
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Latest Posts</h2>
+              <p className="text-gray-600 dark:text-gray-300">Discover amazing stories and insights from our community</p>
             </div>
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 animate-fadeIn">
             {posts.map((post) => (
@@ -130,6 +137,31 @@ function App() {
         title={deletingPost?.title || ''}
       />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/landing" element={<LandingPage />} />
+            <Route 
+              path="/" 
+              element={
+                <ProtectedRoute>
+                  <BlogApp />
+                </ProtectedRoute>
+              } 
+            />
+            <Route path="*" element={<Navigate to="/landing" replace />} />
+          </Routes>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

@@ -34,7 +34,10 @@ export function CreateEditModal({ post, isOpen, onClose, onSave }: CreateEditMod
     setSaving(true);
     try {
       await onSave(title.trim(), content.trim(), author.trim());
-      onClose();
+      // Small delay to ensure the post is saved and UI updates
+      setTimeout(() => {
+        onClose();
+      }, 100);
     } catch (error) {
       console.error('Failed to save post:', error);
     } finally {
@@ -49,14 +52,14 @@ export function CreateEditModal({ post, isOpen, onClose, onSave }: CreateEditMod
       <div className="flex items-center justify-center min-h-screen px-4 py-8">
         <div className="fixed inset-0 bg-black bg-opacity-60 transition-opacity backdrop-blur-sm" onClick={onClose} />
         
-        <div className="relative bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col transform animate-slideUp">
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50">
-            <h2 className="text-xl font-bold text-gray-900">
+        <div className="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col transform animate-slideUp transition-colors duration-300">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-700 dark:to-gray-600">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
               {post ? 'Edit Post' : 'Create New Post'}
             </h2>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-white rounded-lg transition-all duration-200 hover:scale-110 hover:shadow-md"
+              className="p-2 hover:bg-white dark:hover:bg-gray-600 rounded-lg transition-all duration-200 hover:scale-110 hover:shadow-md text-gray-600 dark:text-gray-300"
             >
               <X size={24} />
             </button>
@@ -65,7 +68,7 @@ export function CreateEditModal({ post, isOpen, onClose, onSave }: CreateEditMod
           <form onSubmit={handleSubmit} className="flex-1 flex flex-col">
             <div className="p-6 space-y-4 flex-1">
               <div>
-                <label htmlFor="author" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="author" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Author
                 </label>
                 <input
@@ -73,14 +76,14 @@ export function CreateEditModal({ post, isOpen, onClose, onSave }: CreateEditMod
                   id="author"
                   value={author}
                   onChange={(e) => setAuthor(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 hover:border-gray-400"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 hover:border-gray-400 dark:hover:border-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="Your name"
                   required
                 />
               </div>
               
               <div>
-                <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Title
                 </label>
                 <input
@@ -88,14 +91,14 @@ export function CreateEditModal({ post, isOpen, onClose, onSave }: CreateEditMod
                   id="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-4 py-3 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 hover:border-gray-400"
+                  className="w-full px-4 py-3 text-lg border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 hover:border-gray-400 dark:hover:border-gray-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="Enter a compelling title..."
                   required
                 />
               </div>
               
               <div className="flex-1">
-                <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="content" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Content
                 </label>
                 <textarea
@@ -103,18 +106,18 @@ export function CreateEditModal({ post, isOpen, onClose, onSave }: CreateEditMod
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   rows={12}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 hover:border-gray-400 resize-none"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 hover:border-gray-400 dark:hover:border-gray-500 resize-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                   placeholder="Write your blog post content here..."
                   required
                 />
               </div>
             </div>
             
-            <div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+            <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex justify-end space-x-3">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all duration-200 hover:scale-105"
+                className="px-6 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 hover:scale-105"
               >
                 Cancel
               </button>

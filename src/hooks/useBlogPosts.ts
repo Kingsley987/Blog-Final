@@ -9,16 +9,23 @@ export function useBlogPosts() {
   useEffect(() => {
     fetchPosts();
     
-    // Set up real-time subscription
+    // Set up real-time subscription for posts table changes
     const subscription = supabase
-      .channel('posts')
+      .channel('posts-changes')
       .on('postgres_changes', 
-        { event: '*', schema: 'public', table: 'posts' }, 
-        () => {
+        { 
+          event: '*', 
+          schema: 'public', 
+          table: 'posts' 
+        }, 
+        (payload) => {
+          console.log('Posts table changed:', payload);
           fetchPosts();
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log('Subscription status:', status);
+      });
 
     return () => {
       subscription.unsubscribe();
@@ -48,6 +55,9 @@ export function useBlogPosts() {
         .insert([{ title, content, author }]);
 
       if (error) throw error;
+      
+      // Immediately refetch posts to show the new post
+      await fetchPosts();
     } catch (err) {
       throw new Error(err instanceof Error ? err.message : 'Failed to create post');
     }
@@ -61,6 +71,9 @@ export function useBlogPosts() {
         .eq('id', id);
 
       if (error) throw error;
+      
+      // Immediately refetch posts to show the updated post
+      await fetchPosts();
     } catch (err) {
       throw new Error(err instanceof Error ? err.message : 'Failed to update post');
     }
@@ -74,6 +87,9 @@ export function useBlogPosts() {
         .eq('id', id);
 
       if (error) throw error;
+      
+      // Immediately refetch posts to show the updated list
+      await fetchPosts();
     } catch (err) {
       throw new Error(err instanceof Error ? err.message : 'Failed to delete post');
     }

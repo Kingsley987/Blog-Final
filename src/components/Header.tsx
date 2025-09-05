@@ -30,10 +30,11 @@ export function Header({ onCreatePost }: HeaderProps) {
   };
 
   return (
-    <header className="bg-gradient-to-r from-black via-gray-900 to-black dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-white border-b border-gray-800 dark:border-gray-700 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-blue-600/10 animate-pulse"></div>
-      <div className="max-w-6xl mx-auto px-4 py-4 sm:py-6">
-        <div className="flex items-center justify-between relative z-10">
+    <>
+      <header className="bg-gradient-to-r from-black via-gray-900 to-black dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-white border-b border-gray-800 dark:border-gray-700 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-blue-600/10 animate-pulse"></div>
+        <div className="max-w-6xl mx-auto px-4 py-4 sm:py-6">
+          <div className="flex items-center justify-between relative z-10">
           <Link to="/" className="flex items-center space-x-2 sm:space-x-3 hover:opacity-80 transition-opacity" onClick={() => setIsMobileMenuOpen(false)}>
             <div className="relative">
               <BookOpen size={28} className="text-white sm:w-8 sm:h-8" />
@@ -104,78 +105,53 @@ export function Header({ onCreatePost }: HeaderProps) {
           <div className="md:hidden flex items-center space-x-2">
             <ThemeSwitcher />
             <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                toggleMobileMenu();
-              }}
-              onTouchEnd={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                toggleMobileMenu();
-              }}
-              className="p-3 rounded-lg hover:bg-gray-800 active:bg-gray-700 transition-colors touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
+              onClick={toggleMobileMenu}
+              className="p-3 rounded-lg hover:bg-gray-800 active:bg-gray-700 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
               aria-label="Toggle mobile menu"
-              style={{ WebkitTapHighlightColor: 'transparent' }}
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Navigation Menu */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 border-t border-gray-700 dark:border-gray-600">
-            <div className="pt-4 space-y-3">
+        </div>
+      </header>
+
+      {/* Mobile Navigation Menu - Outside header */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden bg-gradient-to-r from-gray-900 to-gray-800 text-white border-b border-gray-700 shadow-lg">
+          <div className="max-w-6xl mx-auto px-4 py-6">
+            <div className="space-y-4">
               {user ? (
                 <>
                   <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
+                    onClick={() => {
                       onCreatePost();
-                      // Close menu after a small delay to ensure the click is processed
-                      setTimeout(() => {
-                        setIsMobileMenuOpen(false);
-                      }, 100);
+                      setIsMobileMenuOpen(false);
                     }}
-                    onTouchEnd={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      onCreatePost();
-                      setTimeout(() => {
-                        setIsMobileMenuOpen(false);
-                      }, 100);
-                    }}
-                    className="w-full flex items-center justify-center space-x-2 bg-white text-black px-4 py-3 rounded-lg font-semibold hover:bg-gray-100 active:bg-gray-200 transition-all duration-300 touch-manipulation min-h-[44px]"
-                    style={{ WebkitTapHighlightColor: 'transparent' }}
+                    className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-4 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 active:from-blue-800 active:to-purple-800 transition-all duration-300 min-h-[48px] shadow-lg hover:shadow-xl transform hover:scale-105"
                   >
                     <PenTool size={20} />
                     <span>Write Post</span>
                   </button>
                   
-                  <div className="px-4 py-2 bg-gray-800 rounded-lg">
-                    <div className="flex items-center space-x-2 text-sm mb-3">
-                      <User size={16} className="text-gray-300" />
-                      <span className="text-gray-300">{user.email}</span>
+                  <div className="bg-gradient-to-r from-gray-800 to-gray-700 rounded-xl p-4 shadow-lg">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                        <User size={18} className="text-white" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-300">Signed in as</p>
+                        <p className="text-white font-medium truncate">{user.email}</p>
+                      </div>
                     </div>
                     <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleSignOut();
-                      }}
-                      onTouchEnd={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleSignOut();
-                      }}
+                      onClick={handleSignOut}
                       disabled={isSigningOut}
-                      className="w-full flex items-center justify-center space-x-2 text-gray-300 hover:text-white active:text-white px-4 py-3 rounded-lg hover:bg-gray-700 active:bg-gray-600 transition-all duration-300 touch-manipulation min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed"
-                      style={{ WebkitTapHighlightColor: 'transparent' }}
+                      className="w-full flex items-center justify-center space-x-2 text-gray-300 hover:text-white active:text-white px-4 py-3 rounded-lg hover:bg-gray-600 active:bg-gray-500 transition-all duration-300 min-h-[48px] disabled:opacity-50 disabled:cursor-not-allowed border border-gray-600 hover:border-gray-500"
                     >
                       {isSigningOut ? (
-                        <div className="w-4 h-4 border-2 border-gray-300 border-t-transparent rounded-full animate-spin" />
+                        <div className="w-5 h-5 border-2 border-gray-300 border-t-transparent rounded-full animate-spin" />
                       ) : (
                         <LogOut size={18} />
                       )}
@@ -188,16 +164,14 @@ export function Header({ onCreatePost }: HeaderProps) {
                   <Link
                     to="/signin"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block w-full text-gray-300 hover:text-white active:text-white px-4 py-3 rounded-lg hover:bg-gray-800 active:bg-gray-700 transition-all duration-300 touch-manipulation min-h-[44px] flex items-center"
-                    style={{ WebkitTapHighlightColor: 'transparent' }}
+                    className="block w-full text-gray-300 hover:text-white active:text-white px-6 py-4 rounded-xl hover:bg-gray-800 active:bg-gray-700 transition-all duration-300 min-h-[48px] flex items-center justify-center border border-gray-600 hover:border-gray-500"
                   >
                     Sign In
                   </Link>
                   <Link
                     to="/signup"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block w-full flex items-center justify-center space-x-2 bg-white text-black px-4 py-3 rounded-lg font-semibold hover:bg-gray-100 active:bg-gray-200 transition-all duration-300 touch-manipulation min-h-[44px]"
-                    style={{ WebkitTapHighlightColor: 'transparent' }}
+                    className="block w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-4 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 active:from-blue-800 active:to-purple-800 transition-all duration-300 min-h-[48px] shadow-lg hover:shadow-xl transform hover:scale-105"
                   >
                     <User size={20} />
                     <span>Sign Up</span>
@@ -206,8 +180,8 @@ export function Header({ onCreatePost }: HeaderProps) {
               )}
             </div>
           </div>
-        )}
-      </div>
-    </header>
+        </div>
+      )}
+    </>
   );
 }

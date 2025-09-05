@@ -22,6 +22,7 @@ export type BlogPost = {
   title: string;
   content: string;
   author: string;
+  user_id: string | null;
   created_at: string;
   updated_at: string;
 };

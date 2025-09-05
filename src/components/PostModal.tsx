@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, Calendar, User, Edit3, Clock, BookOpen } from 'lucide-react';
 import { BlogPost } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
 
 interface PostModalProps {
   post: BlogPost | null;
@@ -10,7 +11,12 @@ interface PostModalProps {
 }
 
 export function PostModal({ post, isOpen, onClose, onEdit }: PostModalProps) {
+  const { user } = useAuth();
+  
   if (!isOpen || !post) return null;
+
+  // Check if the current user owns this post
+  const isOwner = user && post.user_id === user.id;
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -52,13 +58,15 @@ export function PostModal({ post, isOpen, onClose, onEdit }: PostModalProps) {
             </div>
             
             <div className="flex items-center justify-end space-x-2">
-              <button
-                onClick={onEdit}
-                className="inline-flex items-center space-x-1 px-2 sm:px-3 py-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors text-sm"
-              >
-                <Edit3 size={14} className="sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">Edit</span>
-              </button>
+              {isOwner && (
+                <button
+                  onClick={onEdit}
+                  className="inline-flex items-center space-x-1 px-2 sm:px-3 py-2 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors text-sm"
+                >
+                  <Edit3 size={14} className="sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">Edit</span>
+                </button>
+              )}
               <button
                 onClick={onClose}
                 className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200 hover:scale-110 text-gray-600 dark:text-gray-300"

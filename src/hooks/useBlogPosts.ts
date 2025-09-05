@@ -50,9 +50,16 @@ export function useBlogPosts() {
 
   const createPost = async (title: string, content: string, author: string) => {
     try {
+      // Get the current user
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error('User must be authenticated to create posts');
+      }
+
       const { error } = await supabase
         .from('posts')
-        .insert([{ title, content, author }]);
+        .insert([{ title, content, author, user_id: user.id }]);
 
       if (error) throw error;
       
@@ -65,10 +72,31 @@ export function useBlogPosts() {
 
   const updatePost = async (id: string, title: string, content: string) => {
     try {
+      // Get the current user
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error('User must be authenticated to update posts');
+      }
+
+      // First check if the post exists and belongs to the user
+      const { data: post, error: fetchError } = await supabase
+        .from('posts')
+        .select('user_id')
+        .eq('id', id)
+        .single();
+
+      if (fetchError) throw fetchError;
+      
+      if (!post || post.user_id !== user.id) {
+        throw new Error('You can only update your own posts');
+      }
+
       const { error } = await supabase
         .from('posts')
         .update({ title, content })
-        .eq('id', id);
+        .eq('id', id)
+        .eq('user_id', user.id); // Double-check ownership in the update
 
       if (error) throw error;
       
@@ -81,10 +109,31 @@ export function useBlogPosts() {
 
   const deletePost = async (id: string) => {
     try {
+      // Get the current user
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error('User must be authenticated to delete posts');
+      }
+
+      // First check if the post exists and belongs to the user
+      const { data: post, error: fetchError } = await supabase
+        .from('posts')
+        .select('user_id')
+        .eq('id', id)
+        .single();
+
+      if (fetchError) throw fetchError;
+      
+      if (!post || post.user_id !== user.id) {
+        throw new Error('You can only delete your own posts');
+      }
+
       const { error } = await supabase
         .from('posts')
         .delete()
-        .eq('id', id);
+        .eq('id', id)
+        .eq('user_id', user.id); // Double-check ownership in the delete
 
       if (error) throw error;
       

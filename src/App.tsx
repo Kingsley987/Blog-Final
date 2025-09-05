@@ -44,18 +44,30 @@ function BlogApp() {
   };
 
   const handleSavePost = async (title: string, content: string, author: string) => {
-    if (editingPost) {
-      await updatePost(editingPost.id, title, content);
-    } else {
-      await createPost(title, content, author);
+    try {
+      if (editingPost) {
+        await updatePost(editingPost.id, title, content);
+      } else {
+        await createPost(title, content, author);
+      }
+    } catch (error) {
+      console.error('Error saving post:', error);
+      // You could add a toast notification here
+      alert(error instanceof Error ? error.message : 'Failed to save post');
     }
   };
 
   const handleConfirmDelete = async () => {
     if (deletingPost) {
-      await deletePost(deletingPost.id);
-      setShowDeleteModal(false);
-      setDeletingPost(null);
+      try {
+        await deletePost(deletingPost.id);
+        setShowDeleteModal(false);
+        setDeletingPost(null);
+      } catch (error) {
+        console.error('Error deleting post:', error);
+        // You could add a toast notification here
+        alert(error instanceof Error ? error.message : 'Failed to delete post');
+      }
     }
   };
 

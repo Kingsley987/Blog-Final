@@ -83,18 +83,18 @@ function BlogApp() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <Header onCreatePost={handleCreatePost} />
       
-      <main className="max-w-6xl mx-auto px-4 py-8">
+      <main className="max-w-6xl mx-auto px-4 py-6 sm:py-8">
         {loading ? (
           <LoadingSpinner />
         ) : posts.length === 0 ? (
           <EmptyState onCreatePost={handleCreatePost} />
         ) : (
           <>
-            <div className="mb-8 text-center">
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Latest Posts</h2>
-              <p className="text-gray-600 dark:text-gray-300">Discover amazing stories and insights from our community</p>
+            <div className="mb-6 sm:mb-8 text-center px-4">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">Latest Posts</h2>
+              <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base">Discover amazing stories and insights from our community</p>
             </div>
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 animate-fadeIn">
+            <div className="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 animate-fadeIn">
             {posts.map((post) => (
               <BlogCard
                 key={post.id}
